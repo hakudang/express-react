@@ -15,6 +15,10 @@ const dbConfig = {
   database: 'test_db', // Đảm bảo đã tạo database này
 };
 
+// CORS middleware để cho phép truy cập từ frontend
+const cors = require('cors');
+app.use(cors());
+
 // API: Lấy danh sách user
 app.get('/users', async (req, res) => {
   try {
