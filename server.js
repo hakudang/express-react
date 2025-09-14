@@ -4,8 +4,13 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 
+// Tạo ứng dụng Express 
 const app = express();
 app.use(express.json());
+
+// CORS middleware để cho phép truy cập từ frontend
+const cors = require('cors');
+app.use(cors());
 
 // Thông tin kết nối MySQL (bạn cần chỉnh sửa cho phù hợp)
 const dbConfig = {
@@ -15,9 +20,7 @@ const dbConfig = {
   database: 'test_db', // Đảm bảo đã tạo database này
 };
 
-// CORS middleware để cho phép truy cập từ frontend
-const cors = require('cors');
-app.use(cors());
+
 
 // API: Lấy danh sách user
 app.get('/users', async (req, res) => {
@@ -33,13 +36,13 @@ app.get('/users', async (req, res) => {
 
 // API: Thêm user mới
 app.post('/users', async (req, res) => {
-  const { name } = req.body;
-  if (!name) return res.status(400).json({ error: 'Name is required' });
+  const { name, email } = req.body;
+  if (!name || !email) return res.status(400).json({ error: 'Name and email are required' });
   try {
     const connection = await mysql.createConnection(dbConfig);
-    const [result] = await connection.execute('INSERT INTO users (name) VALUES (?)', [name]);
+    const [result] = await connection.execute('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
     await connection.end();
-    res.json({ id: result.insertId, name });
+    res.json({ id: result.insertId, name, email }); // Trả về user vừa thêm
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
