@@ -28,9 +28,9 @@ app.get('/users', async (req, res) => {
     const connection = await mysql.createConnection(dbConfig);
     const [rows] = await connection.execute('SELECT * FROM users');
     await connection.end();
-    res.json(rows);
+    res.json(rows); // Trả về danh sách user
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message }); 
   }
 });
 
@@ -43,6 +43,37 @@ app.post('/users', async (req, res) => {
     const [result] = await connection.execute('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
     await connection.end();
     res.json({ id: result.insertId, name, email }); // Trả về user vừa thêm
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+// API: Sửa user
+app.put('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body;
+  if (!name || !email) return res.status(400).json({ error: 'Name and email are required' });
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    const [result] = await connection.execute('UPDATE users SET name = ?, email = ? WHERE id = ?', [name, email, id]);
+    await connection.end();
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'User not found' });
+    res.json({ id, name, email });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// API: Xóa user
+app.delete('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    const [result] = await connection.execute('DELETE FROM users WHERE id = ?', [id]);
+    await connection.end();
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'User not found' });
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
