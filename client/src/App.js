@@ -1,4 +1,4 @@
-
+// @file client/src/App.js
 
 import React, { useRef } from 'react';
 import './App.css';

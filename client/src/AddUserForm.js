@@ -1,4 +1,6 @@
+// @file client/src/AddUserForm.js
 import React, { useState } from 'react';
+import { API, apiFetch } from './api';
 
 function AddUserForm({ onUserAdded }) {
   const [name, setName] = useState('');
@@ -15,12 +17,10 @@ function AddUserForm({ onUserAdded }) {
       return;
     }
     try {
-      const res = await fetch('http://localhost:3001/users', {
+      await apiFetch(API.users, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email })
       });
-      if (!res.ok) throw new Error('Thêm user thất bại!');
       setName('');
       setEmail('');
       setSuccess('Thêm user thành công!');

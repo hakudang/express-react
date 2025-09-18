@@ -1,35 +1,44 @@
-# Node modules
+# @file .gitignore
+# --- Node & Monorepo ---
 node_modules/
+client/node_modules/
 
-# NPM log files
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-
-# Binaries
-.env
-
-# Logs
+# --- Logs ---
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# Build output
-/build
-/dist
+# --- Environment files (keep example files only) ---
+.env
+.env.*
+!.env.example
+client/.env
+client/.env.*
+!client/.env.example
 
-# React build output
-/public/build
-/public/dist
+# Do NOT commit production secrets
+# (Không đưa .env.production lên git/cPanel từ repo)
+.env.production
 
-# Dependency directories
-.cache
-.webpack
+# --- Build outputs ---
+build/
+dist/
+client/build/
+client/dist/
+public/build/
+public/dist/
 
-# OS generated files
+# --- Caches & coverage ---
+.cache/
+.webpack/
+coverage/
+.nyc_output/
+
+# --- OS / Editor junk ---
 .DS_Store
 Thumbs.db
-
-# Environment files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.vscode/
+.idea/
+*.swp
